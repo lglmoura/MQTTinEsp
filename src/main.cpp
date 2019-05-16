@@ -1,7 +1,15 @@
 #include <Arduino.h>
+#include "config/config.h"
+#include "connection/wifi.h"
+
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(115200);
+  delay(10);
+
+  if (conectaWiFi()){
+     
+  }
 }
 
 void loop() {

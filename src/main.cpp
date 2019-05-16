@@ -2,6 +2,7 @@
 #include "config/config.h"
 #include "connection/wifi.h"
 #include "connection/mqtt.h"
+#include "sensors/ds18b.h"
 
 unsigned long readTime;
 
@@ -9,10 +10,12 @@ void setup() {
   Serial.begin(115200);
   readTime = 0;
   delay(10);
-  iniciaGPIO();
+  
   if (conectaWiFi()){
      iniciaMQTT();
-     
+     iniciaGPIO();
+     conectaSensorDS18b();
+       
   }
 }
 
@@ -23,14 +26,14 @@ void loop() {
       }
       if(millis() > readTime+6000){
           readTime = millis();
-          
+          readTemperatura();
       }
   
       MQTTClient.loop(); 
   }else{
      if (conectaWiFi()){
-     iniciaMQTT();
-       
+         iniciaMQTT();
+         conectaSensorDS18b();  
      }   
       
   }

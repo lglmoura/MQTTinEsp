@@ -1,5 +1,6 @@
 #include <PubSubClient.h> //Importa biblioteca MQTT
 #include "topic.h"
+#include <ArduinoJson.h>
 
 //constantes e variÃ¡veis globais
 PubSubClient MQTTClient(wifiClient);
@@ -10,6 +11,8 @@ PubSubClient MQTTClient(wifiClient);
 void connectaClienteMQTT(void);
 void iniciaMQTT(void);
 void mqtt_callback(char* topic, byte* payload, unsigned int length);
+void callback(char* topic, byte* payload, unsigned int length);
+
 String mensagem(byte* payload, unsigned int length);
 
 
@@ -48,7 +51,7 @@ void connectaClienteMQTT(void) {
 //Retorno: nenhum
 void iniciaMQTT(void){
   MQTTClient.setServer(MQTT_SERVER, PORTA);
-  MQTTClient.setCallback(mqtt_callback); 
+  MQTTClient.setCallback(callback); 
 }
 
 String mensagem(byte* payload, unsigned int length){
@@ -76,4 +79,21 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
     
     trataTopico(topic,msg);
     
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  DynamicJsonDocument doc(512);
+  
+  DeserializationError err = deserializeJson(doc, payload);
+
+  
+  if (err) {
+     Serial.print(F("deserializeJson() failed with code "));
+      Serial.println(err.c_str());
+      return;
+  }
+  String msg = doc["valor"];
+  trataTopico(topic, msg);
+  Serial.println(msg); 
+  serializeJson(doc,Serial);
 }

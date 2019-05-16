@@ -14,7 +14,7 @@ DeviceAddress insideThermometer;
 void printAddress(DeviceAddress deviceAddress);
 void printTemperature(DeviceAddress deviceAddress);
 
-void readTemperatura()
+void readSensorDS18B()
 {
     sensors.requestTemperatures();
     printTemperature(insideThermometer);

@@ -1,18 +1,37 @@
 #include <Arduino.h>
 #include "config/config.h"
-#include "config/gpio.h"
 #include "connection/wifi.h"
+#include "connection/mqtt.h"
 
+unsigned long readTime;
 
 void setup() {
   Serial.begin(115200);
+  readTime = 0;
   delay(10);
   iniciaGPIO();
   if (conectaWiFi()){
+     iniciaMQTT();
      
   }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  if (WiFi.status() == WL_CONNECTED){
+      if (!MQTTClient.connected()) {
+        connectaClienteMQTT();
+      }
+      if(millis() > readTime+6000){
+          readTime = millis();
+          
+      }
+  
+      MQTTClient.loop(); 
+  }else{
+     if (conectaWiFi()){
+     iniciaMQTT();
+       
+     }   
+      
+  }
 }

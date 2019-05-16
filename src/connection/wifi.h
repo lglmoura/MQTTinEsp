@@ -36,11 +36,12 @@ boolean conectaWiFi(void)
        return false;
     }
       
+
     Serial.println("");
     Serial.println("WiFi connectado com sucesso!");  
     Serial.print("IP obtido: ");
     Serial.println(WiFi.localIP());
-    Serial.println(""); 
+    Serial.println("............"); 
     
     return true;
 }
